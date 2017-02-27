@@ -5,23 +5,18 @@
 		this.currentPage = 0;
 		this.imagesPerPage = 4;
 		this.images = [];
+		this.imagesView = [];
 		this.currentPageImages = [];
 
-		var gallery = this;
-		$http.get("images.json").then(function(data) {
-			gallery.images = data.data;
-			$scope.init(gallery);
-		});
-
 		this.numPages = function() {
-			return Math.floor(this.images.length / this.imagesPerPage) + 1;
+			return Math.floor(this.imagesView.length / this.imagesPerPage) + 1;
 		};
 
 		this.initPage = function(page) {
 			startIndex = page * this.imagesPerPage;
 			this.currentPageImages = [];
-			for (var i=0; i < this.imagesPerPage && startIndex+i < this.images.length; i++) {
-				this.currentPageImages.push(this.images[startIndex + i]);
+			for (var i=0; i < this.imagesPerPage && startIndex+i < this.imagesView.length; i++) {
+				this.currentPageImages.push(this.imagesView[startIndex + i]);
 			}
 		};
 
@@ -45,13 +40,24 @@
 		};
 
 		this.onSearch = function(searchResults) {
-			this.images = searchResults;
-			$scope.init(this);
+			this.imagesView = searchResults;
+			this.currentPage = 0;
+			this.initPage(this.currentPage);
+		};
+
+		this.clear = function() {
+			this.imagesView = this.images;
+			this.currentPage = 0;
+			this.initPage(this.currentPage);
 		};
 
 		$scope.init = function(gallery) {
-			gallery.currentPage = 0;
-			gallery.initPage(gallery.currentPage);
+			$http.get("images.json").then(function(data) {
+				gallery.images = data.data;
+				gallery.imagesView = data.data;
+				gallery.currentPage = 0;
+				gallery.initPage(gallery.currentPage);
+			});
 		};
 
 		$scope.range = function(number) {
@@ -61,6 +67,8 @@
 			}
 			return range;
 		};
+
+		$scope.init(this);
 	}])
 	.directive('gallery', function() {
 		return {
@@ -84,6 +92,11 @@
 			}
 			$scope.callback({results});
 		};
+
+		this.clear = function() {
+			$scope.searchText = "";
+			$scope.clear();
+		}
 	}])
 	.directive('search', function() {
 		return {
@@ -91,7 +104,8 @@
 			templateUrl: "search.html",
 			scope: {
 				content: '=',
-				callback: '&'
+				callback: '&',
+				clear: '&'
 			}
 		};
 	});
