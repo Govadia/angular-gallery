@@ -44,6 +44,11 @@
 			this.initPage(this.currentPage);
 		};
 
+		this.onSearch = function(searchResults) {
+			this.images = searchResults;
+			$scope.init(this);
+		};
+
 		$scope.init = function(gallery) {
 			gallery.currentPage = 0;
 			gallery.initPage(gallery.currentPage);
@@ -77,7 +82,7 @@
 					results.push(content[item]);
 				}
 			}
-			console.log(results);
+			$scope.callback({results});
 		};
 	}])
 	.directive('search', function() {
@@ -85,7 +90,8 @@
 			restrict: 'E',
 			templateUrl: "search.html",
 			scope: {
-				content: '='
+				content: '=',
+				callback: '&'
 			}
 		};
 	});

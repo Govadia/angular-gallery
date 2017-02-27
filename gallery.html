@@ -1,5 +1,5 @@
 <div class="container" ng-controller="GalleryController as galleryCtrl">
-	<search content="galleryCtrl.images"></search>
+	<search content="galleryCtrl.images" callback="galleryCtrl.onSearch(results)"></search>
 	<img class="img-responsive img-thumbnail" width="250" height="250" ng-repeat="image in galleryCtrl.currentPageImages" ng-src="{{image.url}}">
 	<nav aria-label="Page navigation">
 		<ul class="pagination">
