@@ -1,112 +1,135 @@
-/* Gallery module */
+/* Gallery */
 (function() {
-	angular.module("gallery", ["search"])
-	.controller('GalleryController', ['$scope', '$http', function($scope, $http) {
-		this.currentPage = 0;
-		this.imagesPerPage = 4;
-		this.images = [];
-		this.imagesView = [];
-		this.currentPageImages = [];
-
-		this.numPages = function() {
-			return Math.floor(this.imagesView.length / this.imagesPerPage) + 1;
-		};
-
-		this.initPage = function(page) {
-			startIndex = page * this.imagesPerPage;
-			this.currentPageImages = [];
-			for (var i=0; i < this.imagesPerPage && startIndex+i < this.imagesView.length; i++) {
-				this.currentPageImages.push(this.imagesView[startIndex + i]);
-			}
-		};
-
-		this.setPage = function(page) {
-			if (page >= 0 && page <= this.numPages()) {
-				this.currentPage = page;
-				this.initPage(this.currentPage);
-			}
-		};
-
-		this.nextPage = function() {
-			var numPages = this.numPages();
-			var lastPageIndex = numPages - 1;
-			this.currentPage = Math.min(this.currentPage + 1, lastPageIndex);
-			this.initPage(this.currentPage);
-		};
-
-		this.prevPage = function() {
-			this.currentPage = Math.max(this.currentPage - 1, 0);
-			this.initPage(this.currentPage);
-		};
-
-		this.onSearch = function(searchResults) {
-			this.imagesView = searchResults;
-			this.currentPage = 0;
-			this.initPage(this.currentPage);
-		};
-
-		this.clear = function() {
-			this.imagesView = this.images;
-			this.currentPage = 0;
-			this.initPage(this.currentPage);
-		};
-
-		$scope.init = function(gallery) {
-			$http.get("images.json").then(function(data) {
-				gallery.images = data.data;
-				gallery.imagesView = data.data;
-				gallery.currentPage = 0;
-				gallery.initPage(gallery.currentPage);
-			});
-		};
-
-		$scope.range = function(number) {
-			range = [];
-			for (var i = 0; i < number; i++) {
-				range.push(i);
-			}
-			return range;
-		};
-
-		$scope.init(this);
-	}])
+	angular.module('gallery', ['search', 'pagination'])
 	.directive('gallery', function() {
+		var controller = ['$http', '$scope', function($http, $scope) {
+			$scope.init = function() {
+				$scope.imagesPerPage = 4;
+				$scope.imagesView = [];
+				$http.get('images.json').then(function(data) {
+					$scope.images = data.data;
+					$scope.imagesView = data.data;
+				});
+			};
+
+			$scope.init();
+		}];
+
 		return {
 			restrict: 'E',
-			templateUrl: "gallery.html"
+			templateUrl: 'gallery.html',
+			controller: controller,
+			controllerAs: 'galleryCtrl'
 		};
-	})
+	});
 })();
 
-/* Search module */
+/* Search  */
 (function() {
 	angular.module('search', [])
-	.controller('SearchController', ['$scope', function($scope) {
-		this.search = function(keyword) {
-			var content = $scope.content;
-			var results = [];
-			for (item in content) {
-				if (content[item].title.includes(keyword)) {
-					results.push(content[item]);
-				}
-			}
-			$scope.callback({results});
-		};
-
-		this.clear = function() {
-			$scope.searchText = "";
-			$scope.clear();
-		}
-	}])
 	.directive('search', function() {
+		var controller = ['$scope', function($scope) {
+			this.clearedView = [];
+			this.search = function(keyword) {
+				var content = $scope.content;
+				var results = [];
+				for (var item in content) {
+					if (content[item].title.includes(keyword)) {
+						results.push(content[item]);
+					}
+				}
+				this.clearedView = $scope.view;
+				$scope.view = results;
+			};
+
+			this.clear = function() {
+				$scope.searchText = null;
+				$scope.view = this.clearedView;
+			};
+		}];
+
 		return {
 			restrict: 'E',
-			templateUrl: "search.html",
+			templateUrl: 'search.html',
 			scope: {
 				content: '=',
-				callback: '&',
-				clear: '&'
+				view: '='
+			},
+			controller: controller,
+			controllerAs: 'searchCtrl'
+		};
+	});
+})();
+
+/* Pagination */
+(function () {
+	angular.module('pagination', [])
+	.directive('pagination', function() {
+		var controller = ['$scope', function($scope) {
+			var _currentPage = 0;
+
+			$scope.$watch('items', function(newValue, oldValue, scope) {
+				if (newValue != oldValue) {
+				updatePageItems(_currentPage);
+				scope.paginationCtrl.pages = range(scope.paginationCtrl.numPages());
+				}
+			});
+
+			function range(length) {
+				var range = [];
+				for (var i = 0; i < length; i++) {
+					range.push(i);
+				}
+				return range;
 			}
+
+			function updatePageItems(page) {
+				var startIndex = page * $scope.itemsPerPage;
+				var pageItems = [];
+				for (var i=0; i < $scope.itemsPerPage && startIndex+i < $scope.items.length; i++) {
+					pageItems.push($scope.items[startIndex + i]);
+				}
+				$scope.view = pageItems;
+			}
+
+			this.pages = [];
+			this.numPages = function() {
+				return Math.floor($scope.items.length / $scope.itemsPerPage) + 1;
+			};
+
+			this.isCurrent = function(pageIndex) {
+				return _currentPage == pageIndex;
+			};
+
+			this.setPage = function(page) {
+				if (page >= 0 && page <= this.numPages()) {
+					_currentPage = page;
+					updatePageItems(page);
+				}
+			};
+
+			this.nextPage = function() {
+				var lastPageIndex = this.numPages() - 1;
+				_currentPage = Math.min(_currentPage + 1, lastPageIndex);
+				updatePageItems(_currentPage);
+			};
+
+			this.prevPage = function() {
+				_currentPage = Math.max(_currentPage - 1, 0);
+				updatePageItems(_currentPage);
+			};
+		}];
+
+		return {
+			restrict: 'E',
+			templateUrl: 'pagination.html',
+			scope: {
+				itemsPerPage: '=itemsPerPage',
+				items: '=',
+				view: '='
+			},
+			controller: controller,
+			controllerAs: 'paginationCtrl'
 		};
 	});
 })();

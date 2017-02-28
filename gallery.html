@@ -1,19 +1,7 @@
-<div class="container" ng-controller="GalleryController as galleryCtrl">
-	<search content="galleryCtrl.images" callback="galleryCtrl.onSearch(results)" clear="galleryCtrl.clear()"></search>
-	<img class="img-responsive img-thumbnail" width="250" height="250" ng-repeat="image in galleryCtrl.currentPageImages" ng-src="{{image.url}}">
-	<nav aria-label="Page navigation">
-		<ul class="pagination">
-			<li>
-				<a href="" ng-click="galleryCtrl.prevPage()" aria-label="Previous">
-					<span aria-hidden="true">&laquo;</span>
-				</a>
-			</li>
-			<li ng-class="{active: i == galleryCtrl.currentPage }" ng-repeat="i in range(galleryCtrl.numPages())"><a href="#" ng-click="galleryCtrl.setPage(i)">{{i+1}}</a></li>
-			<li>
-				<a href="" ng-click="galleryCtrl.nextPage()" aria-label="Next">
-					<span aria-hidden="true">&raquo;</span>
-				</a>
-			</li>
-		</ul>
-	</nav>
+<div class="container">
+	<search content="images" view="imagesView"></search>
+	
+	<img class="img-responsive img-thumbnail" width="250" height="250" ng-repeat="image in imagesView" ng-src="{{image.url}}">
+
+	<pagination items="images" view="imagesView" items-per-page="imagesPerPage"></pagination>
 </div>
