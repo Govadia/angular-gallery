@@ -1,4 +1,4 @@
-<div>
+<div ng-controller="PaginationController as paginationCtrl">
 	<nav aria-label="Page navigation">
 		<ul class="pagination">
 			<li>
@@ -6,9 +6,7 @@
 					<span aria-hidden="true">&laquo;</span>
 				</a>
 			</li>
-			<li ng-class="{ active: paginationCtrl.isCurrent(page) }" ng-repeat="page in paginationCtrl.pages">
-				<a href="#" ng-click="paginationCtrl.setPage(page)">{{page + 1}}</a>
-			</li>
+			<li ng-class="{active: i == paginationCtrl.currentPage }" ng-repeat="i in paginationCtrl.range(numPages)"><a href="#" ng-click="paginationCtrl.setPage(i)">{{i+1}}</a></li>
 			<li>
 				<a href="" ng-click="paginationCtrl.nextPage()" aria-label="Next">
 					<span aria-hidden="true">&raquo;</span>

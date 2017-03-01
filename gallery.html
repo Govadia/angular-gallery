@@ -1,7 +1,8 @@
-<div class="container">
-	<search content="images" view="imagesView"></search>
-	
-	<img class="img-responsive img-thumbnail" width="250" height="250" ng-repeat="image in imagesView" ng-src="{{image.url}}">
+<div class="container" ng-controller="GalleryController as galleryCtrl">
+	<search search-event="galleryCtrl.onSearch(keyword)" clear="galleryCtrl.onSearchClear()" ng-show="galleryCtrl.isSearchEnabled()"></search>
 
-	<pagination items="images" view="imagesView" items-per-page="imagesPerPage"></pagination>
+	<img class="img-responsive img-thumbnail" width="250" height="250" ng-repeat="image in galleryCtrl.imagesView" ng-src="{{image.url}}">
+	<span>{{ image.title }}</span>
+
+	<pagination num-pages="numPages" set-page-callback="setPageCallback(page)" ng-show="galleryCtrl.isPaginationVisible()"></pagination>
 </div>
