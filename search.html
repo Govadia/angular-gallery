@@ -1,9 +1,9 @@
-<div class="panel well">
-	<form name="searchForm" class="form-inline">
+<div class="panel well" ng-controller="SearchController as searchCtrl">
+	<form name="searchForm" class="form-inline" novalidate="">
 		<div class="form-group">
 			<label for="searchInput">Search</label>
-			<input ng-model="searchText" type="text" class="form-control" name="searchInput">
-			<button type="submit" class="btn btn-default" ng-click="searchCtrl.search(searchText)">Go</button>
+			<input ng-model="searchText" type="text" class="form-control" name="searchInput" required>
+			<button type="submit" class="btn btn-default" ng-click="searchCtrl.search(searchText)" ng-disabled="searchForm.searchInput.$invalid">Go</button>
 			<a href="" class="btn btn-link" ng-click="searchCtrl.clear()">Clear</a>
 		</div>
 	</form>
