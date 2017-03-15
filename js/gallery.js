@@ -80,19 +80,19 @@
 			}
 		};
 
-		$scope.init = function(gallery) {
+		$scope.init = function(galleryCtrl) {
 			$http.get('images.json').then(function(data) {
-				gallery.images = data.data;
+				galleryCtrl.images = data.data;
 				$scope.numPages = 0;
-				if (gallery.paginationEnabled) {
+				if (galleryCtrl.paginationEnabled) {
 					var itemsPerPage = DEFAULT_ITEMS_PER_PAGE;
 					if ($scope.itemsPerPage) {
 						itemsPerPage = Number($scope.itemsPerPage);
 					}
-					pagingSvc.init(gallery.images, itemsPerPage);
+					pagingSvc.init(galleryCtrl.images, itemsPerPage);
 					$scope.numPages = pagingSvc.numPages();
 				}
-				gallery.initPage(0);
+				galleryCtrl.initPage(0);
 				$scope.setPageCallback = setPage;
 			});
 		};
