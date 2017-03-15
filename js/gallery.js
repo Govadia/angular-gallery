@@ -1,6 +1,7 @@
 /* Gallery */
 (function() {
 	var DEFAULT_ITEMS_PER_PAGE = 10;
+	var SEARCH_ENABLE_DEFAULT = true;
 
 	var GallerySearchService = function() {
 		this.search = function(items, keyword) {
@@ -50,7 +51,7 @@
 			if ($scope.enableSearch) {
 				return $scope.enableSearch == 'true';
 			}
-			return true;
+			return SEARCH_ENABLE_DEFAULT;
 		}
 
 		this.initPage = function(page) {
