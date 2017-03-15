@@ -1,6 +1,6 @@
 /* Gallery */
 (function() {
-	var DEFAULT_ITEMS_PER_PAGE = 10;
+	var DEFAULT_ITEMS_PER_PAGE = 4;
 	var SEARCH_ENABLE_DEFAULT = true;
 	var PAGINATION_ENABLE_DEFAULT = true;
 
@@ -39,16 +39,19 @@
 	};
 
 	var GalleryController = function($scope, $http, searchSvc, pagingSvc) {
-		this.paginationEnabled = true;
 		this.paginationVisible = true;
 		this.images = [];
 		this.imagesView = [];
 
-		this.isPaginationVisible = function() {
+		this.isPaginationEnabled = function() {
 			if ($scope.enablePagination) {
-				return $scope.enablePagination == 'true' &&  this.paginationVisible;
+				return $scope.enablePagination == 'true';
 			}
-			return PAGINATION_ENABLE_DEFAULT && this.paginationVisible;
+			return PAGINATION_ENABLE_DEFAULT;
+		};
+
+		this.isPaginationVisible = function() {
+			return this.paginationVisible && this.isPaginationEnabled();
 		};
 
 		this.isSearchEnabled = function () {
@@ -59,7 +62,7 @@
 		}
 
 		this.initPage = function(page) {
-			if (this.paginationEnabled) {
+			if (this.isPaginationEnabled()) {
 				this.imagesView = pagingSvc.getPageContent(page);
 			} else {
 				this.imagesView = this.images;
@@ -88,7 +91,7 @@
 			$http.get('images.json').then(function(data) {
 				galleryCtrl.images = data.data;
 				$scope.numPages = 0;
-				if (galleryCtrl.paginationEnabled) {
+				if (galleryCtrl.isPaginationEnabled()) {
 					var itemsPerPage = DEFAULT_ITEMS_PER_PAGE;
 					if ($scope.itemsPerPage) {
 						itemsPerPage = Number($scope.itemsPerPage);
