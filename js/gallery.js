@@ -2,6 +2,7 @@
 (function() {
 	var DEFAULT_ITEMS_PER_PAGE = 10;
 	var SEARCH_ENABLE_DEFAULT = true;
+	var PAGINATION_ENABLE_DEFAULT = true;
 
 	var GallerySearchService = function() {
 		this.search = function(items, keyword) {
@@ -44,7 +45,10 @@
 		this.imagesView = [];
 
 		this.isPaginationVisible = function() {
-			return this.paginationEnabled && this.paginationVisible;
+			if ($scope.enablePagination) {
+				return $scope.enablePagination == 'true' &&  this.paginationVisible;
+			}
+			return PAGINATION_ENABLE_DEFAULT && this.paginationVisible;
 		};
 
 		this.isSearchEnabled = function () {
@@ -107,7 +111,8 @@
 			templateUrl: 'gallery.html',
 			scope: {
 				itemsPerPage: '@',
-				enableSearch: '@'
+				enableSearch: '@',
+				enablePagination: '@'
 			},
 			controller: GalleryController,
 			controllerAs: 'galleryCtrl'
