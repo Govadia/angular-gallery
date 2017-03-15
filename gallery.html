@@ -1,4 +1,4 @@
-<div class="container" ng-controller="GalleryController as galleryCtrl">
+<div class="container">
 	<search search-event="galleryCtrl.onSearch(keyword)" clear="galleryCtrl.onSearchClear()" ng-show="galleryCtrl.isSearchEnabled()"></search>
 
 	<img class="img-responsive img-thumbnail" width="250" height="250" ng-repeat="image in galleryCtrl.imagesView" ng-src="{{image.url}}">

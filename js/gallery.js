@@ -107,12 +107,13 @@
 			scope: {
 				itemsPerPage: '@',
 				enableSearch: '@'
-			}
+			},
+			controller: GalleryController,
+			controllerAs: 'galleryCtrl'
 		};
 	};
 
 	var app = angular.module('gallery', ['search', 'pagination']);
-	app.controller('GalleryController', GalleryController);
 	app.directive('gallery', GalleryDirective);
 	app.service('SearchService', GallerySearchService);
 	app.service('PagingService', GalleryPaginationService);
@@ -126,7 +127,7 @@
 		};
 
 		this.clear = function() {
-			$scope.searchText = "";
+			$scope.searchText = '';
 			$scope.clear();
 		};
 	};
@@ -139,12 +140,13 @@
 			scope: {
 				searchEvent: '&',
 				clear: '&'
-			}
+			},
+			controller: SearchController,
+			controllerAs: 'searchCtrl'
 		};
 	};
 
 	var app = angular.module('search', []);
-	app.controller('SearchController', SearchController);
 	app.directive('search', SearchDirective);
 })();
 
@@ -186,11 +188,12 @@
 			scope: {
 				numPages: '=',
 				setPageCallback: '&'
-			}
+			},
+			controller: PaginationController,
+			controllerAs: 'paginationCtrl'
 		};
 	};
 
 	var app = angular.module('pagination', []);
-	app.controller('PaginationController', PaginationController);
 	app.directive('pagination', PaginationDirective);
 })();
