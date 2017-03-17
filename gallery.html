@@ -1,7 +1,7 @@
 <div class="container">
 	<div class="panel well row">
 		<search class="col-md-10" search-event="galleryCtrl.onSearch(keyword)" clear="galleryCtrl.onSearchClear()" ng-show="galleryCtrl.isSearchEnabled()"></search>
-		<sorting sort-options="galleryCtrl.getSortOptions()" sort-callback="galleryCtrl.onSort(field)" class="col-md-2"></sorting>
+		<sorting sort-options="galleryCtrl.getSortOptions()" sort-callback="galleryCtrl.onSort(field)" class="col-md-2" ng-show="galleryCtrl.isSortEnabled()"></sorting>
 	</div>
 	
 	<div class="row">

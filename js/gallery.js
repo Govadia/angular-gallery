@@ -2,6 +2,7 @@
 (function() {
 	var DEFAULT_ITEMS_PER_PAGE = 4;
 	var SEARCH_ENABLE_DEFAULT = true;
+	var SORT_ENABLE_DEFAULT = true;
 	var PAGINATION_ENABLE_DEFAULT = true;
 
 	var GallerySearchService = function() {
@@ -81,12 +82,20 @@
 			this.paginationVisible = true;
 		};
 
+		this.isSortEnabled = function() {
+			if($scope.enableSort) {
+				return $scope.enableSort == 'true';
+			}
+			return SORT_ENABLE_DEFAULT;
+		};
+
 		this.onSort = function(field) {
 			this.images.sort(function(a,b) {
 				return a[field].localeCompare(b[field]);
 			});
-			this.initPage(0); // TODO: introducing a bug (not resetting pagination to 0)
-		}
+			this.initPage(0); // TODO: introducing a bug (not resetting pagination to 0). not clearing search
+			this.paginationVisible = true;
+		};
 
 		this.getSortOptions = function() {
 			return this.sortOptions;
@@ -128,7 +137,8 @@
 			scope: {
 				itemsPerPage: '@',
 				enableSearch: '@',
-				enablePagination: '@'
+				enablePagination: '@',
+				enableSort: '@'
 			},
 			controller: GalleryController,
 			controllerAs: 'galleryCtrl'
