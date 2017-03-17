@@ -77,9 +77,16 @@
 		};
 
 		this.onSearchClear = function() {
-			this.initPage(0);
+			this.initPage(0); // TODO: introducing a bug (not resetting pagination to 0)
 			this.paginationVisible = true;
 		};
+
+		this.onSort = function(field) {
+			this.images.sort(function(a,b) {
+				return a[field].localeCompare(b[field]);
+			});
+			this.initPage(0); // TODO: introducing a bug (not resetting pagination to 0)
+		}
 
 		this.getSortOptions = function() {
 			return this.sortOptions;
@@ -169,7 +176,7 @@
 (function() {
 	var SortingController = function ($scope) {
 		this.sort = function () {
-			console.log($scope.selectedName);
+			$scope.sortCallback({field: $scope.selectedName});
 		};
 	};
 	SortingController.$inject = ['$scope'];
@@ -179,7 +186,8 @@
 			restrict: 'E',
 			templateUrl: 'sorting.html',
 			scope: {
-				sortOptions: '='
+				sortOptions: '=',
+				sortCallback: '&'
 			},
 			controller: SortingController,
 			controllerAs: 'sortingCtrl'
