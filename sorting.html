@@ -1,5 +1,5 @@
 <div style="margin-top: 10px">
   <label>Sort By</label>
-  <select style="margin-left: 5px" ng-model="selectedName" ng-init="selectedName = sortOptions[0]" ng-options="x for x in sortOptions">
+  <select style="margin-left: 5px" ng-model="selectedName" ng-change="sortingCtrl.sort()" ng-options="x for x in sortOptions">
   </select>
 </div>

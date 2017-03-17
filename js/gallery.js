@@ -42,6 +42,7 @@
 		this.paginationVisible = true;
 		this.images = [];
 		this.imagesView = [];
+		this.sortOptions = [];
 
 		this.isPaginationEnabled = function() {
 			if ($scope.enablePagination) {
@@ -80,9 +81,8 @@
 			this.paginationVisible = true;
 		};
 
-		var sortOptions = ["Title", "Date"];
 		this.getSortOptions = function() {
-			return sortOptions;
+			return this.sortOptions;
 		};
 
 		var self = this;
@@ -95,6 +95,7 @@
 		$scope.init = function(galleryCtrl) {
 			$http.get('images.json').then(function(data) {
 				galleryCtrl.images = data.data;
+				galleryCtrl.sortOptions = Object.keys(galleryCtrl.images[0]);
 				$scope.numPages = 0;
 				if (galleryCtrl.isPaginationEnabled()) {
 					var itemsPerPage = DEFAULT_ITEMS_PER_PAGE;
@@ -167,7 +168,9 @@
 /* Sorting */
 (function() {
 	var SortingController = function ($scope) {
-		$scope.names = ["one", "two", "three"];
+		this.sort = function () {
+			console.log($scope.selectedName);
+		};
 	};
 	SortingController.$inject = ['$scope'];
 
@@ -179,7 +182,7 @@
 				sortOptions: '='
 			},
 			controller: SortingController,
-			controllerAs: 'SortingCtrl'
+			controllerAs: 'sortingCtrl'
 		};
 	};
 
