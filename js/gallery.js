@@ -59,7 +59,7 @@
 				return $scope.enableSearch == 'true';
 			}
 			return SEARCH_ENABLE_DEFAULT;
-		}
+		};
 
 		this.initPage = function(page) {
 			if (this.isPaginationEnabled()) {
@@ -78,6 +78,11 @@
 		this.onSearchClear = function() {
 			this.initPage(0);
 			this.paginationVisible = true;
+		};
+
+		var sortOptions = ["Title", "Date"];
+		this.getSortOptions = function() {
+			return sortOptions;
 		};
 
 		var self = this;
@@ -122,7 +127,7 @@
 		};
 	};
 
-	var app = angular.module('gallery', ['search', 'pagination']);
+	var app = angular.module('gallery', ['search', 'pagination', 'sorting']);
 	app.directive('gallery', GalleryDirective);
 	app.service('SearchService', GallerySearchService);
 	app.service('PagingService', GalleryPaginationService);
@@ -157,6 +162,29 @@
 
 	var app = angular.module('search', []);
 	app.directive('search', SearchDirective);
+})();
+
+/* Sorting */
+(function() {
+	var SortingController = function ($scope) {
+		$scope.names = ["one", "two", "three"];
+	};
+	SortingController.$inject = ['$scope'];
+
+	var SortingDirective = function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'sorting.html',
+			scope: {
+				sortOptions: '='
+			},
+			controller: SortingController,
+			controllerAs: 'SortingCtrl'
+		};
+	};
+
+	var app = angular.module('sorting', []);
+	app.directive('sorting', SortingDirective);
 })();
 
 /* Pagination */
