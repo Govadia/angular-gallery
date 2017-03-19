@@ -9,7 +9,7 @@
 		this.search = function(items, keyword) {
 			var searchResults = [];
 			for (var item in items) {
-				if (items[item].title.includes(keyword)) {
+				if (items[item].title.toLowerCase().includes(keyword.toLowerCase())) {
 					searchResults.push(items[item]);
 				}
 			}
