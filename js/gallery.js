@@ -155,12 +155,12 @@
 (function() {
 	var SearchController = function($scope) {
 		this.search = function(keyword) {
-			$scope.searchEvent({ keyword: keyword });
+			$scope.searchCallback({ keyword: keyword });
 		};
 
 		this.clear = function() {
 			$scope.searchText = '';
-			$scope.clear();
+			$scope.clearCallback();
 		};
 	};
 	SearchController.$inject = ['$scope'];
@@ -170,8 +170,8 @@
 			restrict: 'E',
 			templateUrl: 'search.html',
 			scope: {
-				searchEvent: '&',
-				clear: '&'
+				searchCallback: '&',
+				clearCallback: '&'
 			},
 			controller: SearchController,
 			controllerAs: 'searchCtrl'
