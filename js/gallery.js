@@ -41,6 +41,7 @@
 
 	var GalleryController = function($scope, $http, searchSvc, pagingSvc) {
 		this.paginationVisible = true;
+		this.sortingVisible = true;
 		this.images = [];
 		this.imagesView = [];
 		this.sortOptions = [];
@@ -55,6 +56,10 @@
 		this.isPaginationVisible = function() {
 			return this.paginationVisible && this.isPaginationEnabled();
 		};
+
+		this.isSortingVisible = function() {
+			return this.sortingVisible && this.isSortingEnabled();
+		}
 
 		this.isSearchEnabled = function () {
 			if ($scope.enableSearch) {
@@ -75,14 +80,16 @@
 			var searchResults = searchSvc.search(this.images, keyword);
 			this.imagesView = searchResults;
 			this.paginationVisible = false;
+			this.sortingVisible = false;
 		};
 
 		this.onSearchClear = function() {
 			this.initPage(0); // TODO: introducing a bug (not resetting pagination to 0)
 			this.paginationVisible = true;
+			this.sortingVisible = true;
 		};
 
-		this.isSortEnabled = function() {
+		this.isSortingEnabled = function() {
 			if($scope.enableSort) {
 				return $scope.enableSort == 'true';
 			}
