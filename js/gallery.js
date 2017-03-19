@@ -59,7 +59,7 @@
 
 		this.isSortingVisible = function() {
 			return this.sortingVisible && this.isSortingEnabled();
-		}
+		};
 
 		this.isSearchEnabled = function () {
 			if ($scope.enableSearch) {
@@ -84,9 +84,10 @@
 		};
 
 		this.onSearchClear = function() {
-			this.initPage(0); // TODO: introducing a bug (not resetting pagination to 0)
 			this.paginationVisible = true;
 			this.sortingVisible = true;
+			this.initPage(0);
+			signalPaginationReset();
 		};
 
 		this.isSortingEnabled = function() {
@@ -100,8 +101,10 @@
 			this.images.sort(function(a,b) {
 				return a[field].localeCompare(b[field]);
 			});
-			this.initPage(0); // TODO: introducing a bug (not resetting pagination to 0). not clearing search
+			this.initPage(0);
 			this.paginationVisible = true;
+			signalPaginationReset();
+			signalSearchReset();
 		};
 
 		this.getSortOptions = function() {
@@ -113,6 +116,14 @@
 			if (page >= 0 && page <= pagingSvc.numPages()) {
 				self.initPage(page);
 			}
+		};
+
+		var signalPaginationReset = function() {
+			$scope.$broadcast('pagination-reset', null);
+		};
+
+		var signalSearchReset = function() {
+			$scope.$broadcast('search-reset', null);
 		};
 
 		$scope.init = function(galleryCtrl) {
@@ -164,6 +175,10 @@
 		this.search = function(keyword) {
 			$scope.searchCallback({ keyword: keyword });
 		};
+
+		$scope.$on('search-reset', function(event, data) {
+			$scope.searchText = '';
+		});
 
 		this.clear = function() {
 			$scope.searchText = '';
@@ -243,6 +258,11 @@
 			}
 			return range;
 		};
+
+		$scope.$on('pagination-reset', function(event, data) {
+			self.setPage(0);
+		});
+
 	};
 	PaginationController.$inject = ['$scope'];
 
